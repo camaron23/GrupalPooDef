@@ -1,13 +1,20 @@
 package empleado;
 
 import cliente.Cliente;
+import cliente.GestorClientes;
+import pedido.GestorPedidos;
+import pedido.Venta;
 import producto.*;
+import util.GestorId;
 
+import java.io.File;
+import java.util.List;
 import java.util.Scanner;
 
 public class InterfazEmpleado {
 
     public static void InterfazEmp(Empleado empleadoAuth) {
+
         GestorId gestorId = new GestorId();
         int sel1;
         Scanner sc = new Scanner(System.in);
@@ -15,10 +22,11 @@ public class InterfazEmpleado {
         GestorEmpleados gestorEmpleados = new GestorEmpleados();
         GestorProductos gestorProductos = new GestorProductos();
         GestorPedidos gestorPedidos = new GestorPedidos();
-        gestorClientes.inicializarClientes(gestorClientes);
-        gestorEmpleados.inicializarEmpleados(gestorEmpleados);
-        gestorProductos.inicializarProductos(gestorProductos);
-        gestorPedidos.inicializarPedidos(gestorPedidos);
+        gestorClientes.inicializarClientes();
+        gestorEmpleados.inicializarEmpleados();
+        gestorProductos.inicializarProductos();
+        gestorPedidos.inicializarPedidos();
+
 
         boolean bool1 = true;
         while (bool1 == true) {
@@ -37,20 +45,20 @@ public class InterfazEmpleado {
 
             switch (sel1) {
                 case 1:
-                    System.out.println("Gestionar clientes");
-                    System.out.println("==================");
-                    System.out.println("\n\n\n");
-                    System.out.println("1. Añadir cliente");
-                    System.out.println("2. Eliminar cliente");
-                    System.out.println("3. Modificar cliente");
-                    System.out.println("4. Mostrar clientes");
-                    System.out.println("5. Volver");
-                    System.out.print("Introduce una opción: ");
-                    sel1 = sc.nextInt();
-                    sc.nextLine();
-
                     boolean bool2 = true;
-                    while (bool2 == true) {
+                    while(bool2 == true) {
+                        System.out.println("Gestionar clientes");
+                        System.out.println("==================");
+                        System.out.println("\n\n\n");
+                        System.out.println("1. Añadir cliente");
+                        System.out.println("2. Eliminar cliente");
+                        System.out.println("3. Modificar cliente");
+                        System.out.println("4. Mostrar clientes");
+                        System.out.println("5. Volver");
+                        System.out.print("Introduce una opción: ");
+                        sel1 = sc.nextInt();
+                        sc.nextLine();
+
                         switch (sel1) {
                             case 1:
                                 System.out.println("Añadir cliente");
@@ -85,12 +93,11 @@ public class InterfazEmpleado {
                                 if (gestorClientes.existeUsuario(userEliminar) == false) {
                                     System.out.println("El cliente no existe\n\n\n");
                                 } else if (gestorClientes.existeUsuario(userEliminar) == true) {
-                                    Cliente clienteEliminar = gestorClientes.obtenerCliente(userEliminar);
-                                    gestorClientes.removeCliente(clienteEliminar);
+                                    Cliente clienteEliminar = gestorClientes.buscarCliente(userEliminar);
+                                    gestorClientes.deleteCliente(clienteEliminar.getDni());
                                     System.out.println("Cliente.Cliente eliminado correctamente\n\n\n");
 
                                 }
-                                bool2 = false;
                                 break;
 
                             case 3:
@@ -99,7 +106,7 @@ public class InterfazEmpleado {
                                 System.out.println("\n\n\n");
                                 System.out.println("DNI: ");
                                 String dniModificar = sc.nextLine();
-                                Cliente clienteModificar = gestorClientes.obtenerCliente(dniModificar);
+                                Cliente clienteModificar = gestorClientes.buscarClienteDni(dniModificar);
                                 System.out.println("Datos del cliente a modificar: ");
                                 System.out.println("Nombre: " + clienteModificar.getNombre());
                                 System.out.println("Apellidos: " + clienteModificar.getApellidos());
@@ -129,7 +136,7 @@ public class InterfazEmpleado {
                                     System.out.println("Contraseña: ");
                                     String contraseña = sc.nextLine();
                                     Cliente cliente = new Cliente(nombre, apellidos, dni, direccion, telefono, email, usuario, contraseña);
-                                    gestorClientes.removeCliente(clienteModificar);
+                                    gestorClientes.deleteCliente(clienteModificar.getDni());
                                     gestorClientes.addCliente(cliente);
                                     System.out.println("Cliente.Cliente modificado correctamente\n\n\n");
                                 } else {
@@ -140,25 +147,35 @@ public class InterfazEmpleado {
                                 System.out.println("Mostrar clientes");
                                 System.out.println("================");
                                 System.out.println("\n\n\n");
-                                gestorClientes.obtenerClientes();
+                                List<Cliente> clientes = gestorClientes.readClientes();
+                                for (int i = 0; i < clientes.size(); i++) {
+                                    System.out.println("Nombre: " + clientes.get(i).getNombre());
+                                    System.out.println("Apellidos: " + clientes.get(i).getApellidos());
+                                    System.out.println("DNI: " + clientes.get(i).getDni());
+                                    System.out.println("Dirección: " + clientes.get(i).getDireccion());
+                                    System.out.println("Teléfono: " + clientes.get(i).getTelefono());
+                                    System.out.println("Email: " + clientes.get(i).getEmail());
+                                    System.out.println("Usuario: " + clientes.get(i).getUsuario());
+                                    System.out.println("========================================");
+                                }
                                 break;
                             case 5:
                                 System.out.println("Volver");
                                 System.out.println("======");
-                                bool2 = false;
                                 System.out.println("\n\n\n");
+                                bool2 = false;
                                 break;
 
                         }
                     }
+
                     break;
 
                 case 2:
-                    boolean bool3 = true;
+                        boolean bool3 = true;
                     while (bool3 == true) {
-                        System.out.println("Gestionar empleados");
+                            System.out.println("Gestionar empleados");
                         System.out.println("===================");
-                        if (empleadoAuth.getPrivilegios() == true) {
                             System.out.println("\n\n\n");
                             System.out.println("1. Añadir empleado");
                             System.out.println("2. Eliminar empleado");
@@ -167,7 +184,7 @@ public class InterfazEmpleado {
                             System.out.println("5. Volver");
                             System.out.print("Introduce una opción: ");
                             int sel2 = sc.nextInt();
-
+                            sc.nextLine();
 
                             switch (sel2) {
                                 case 1:
@@ -209,7 +226,7 @@ public class InterfazEmpleado {
                                     System.out.println("DNI: ");
                                     String dniEliminar = sc.nextLine();
                                     Empleado empleadoEliminar = gestorEmpleados.buscarEmpleado(dniEliminar);
-                                    gestorEmpleados.removeEmpleado(empleadoEliminar);
+                                    gestorEmpleados.deleteEmpleado(empleadoEliminar.getDni());
                                     System.out.println("Empleado.Empleado eliminado correctamente\n\n\n");
                                     break;
                                 case 3:
@@ -255,7 +272,7 @@ public class InterfazEmpleado {
                                             privilegiosBoolean = true;
                                         }
                                         Empleado empleado2 = new Empleado(nombre, apellidos, dni, direccion, telefono, email, puesto, salario, contraseña, privilegiosBoolean);
-                                        gestorEmpleados.removeEmpleado(empleadoModificar);
+                                        gestorEmpleados.deleteEmpleado(empleadoModificar.getDni());
                                         gestorEmpleados.addEmpleado(empleado2);
                                         System.out.println("Empleado.Empleado modificado correctamente\n\n\n");
                                     } else {
@@ -267,6 +284,20 @@ public class InterfazEmpleado {
                                     System.out.println("Mostrar empleados");
                                     System.out.println("================");
                                     System.out.println("\n\n\n");
+                                    List<Empleado> empleados = gestorEmpleados.readEmpleados();
+                                    for (int i = 0; i < empleados.size(); i++) {
+                                        System.out.println("Nombre: " + empleados.get(i).getNombre());
+                                        System.out.println("Apellidos: " + empleados.get(i).getApellidos());
+                                        System.out.println("DNI: " + empleados.get(i).getDni());
+                                        System.out.println("Dirección: " + empleados.get(i).getDireccion());
+                                        System.out.println("Teléfono: " + empleados.get(i).getTelefono());
+                                        System.out.println("Email: " + empleados.get(i).getEmail());
+                                        System.out.println("Puesto: " + empleados.get(i).getPuesto());
+                                        System.out.println("Salario: " + empleados.get(i).getSalario());
+                                        System.out.println("Contraseña: " + empleados.get(i).getContraseña());
+                                        System.out.println("Privilegios: " + empleados.get(i).isPrivilegios());
+                                        System.out.println("\n\n\n");
+                                    }
                                     break;
 
                                 case 5:
@@ -279,7 +310,7 @@ public class InterfazEmpleado {
 
                             }
                         }
-                    }
+
 
                     break;
 
@@ -449,9 +480,9 @@ public class InterfazEmpleado {
                                                 System.out.println("No has introducido ningún dato");
                                                 break;
                                             } else if (nombreAltavozEliminar.equals("") && idAltavozEliminar != 0) {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getId() == idAltavozEliminar) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getId() == idAltavozEliminar) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Altavoz eliminado correctamente");
                                                         break;
                                                     } else {
@@ -460,9 +491,9 @@ public class InterfazEmpleado {
                                                     }
                                                 }
                                             } else if (!nombreAltavozEliminar.equals("") && idAltavozEliminar == 0) {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreAltavozEliminar)) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getNombre().equals(nombreAltavozEliminar)) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Altavoz eliminado correctamente");
                                                         break;
                                                     } else {
@@ -471,9 +502,9 @@ public class InterfazEmpleado {
                                                     }
                                                 }
                                             } else {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreAltavozEliminar) && gestorProductos.obtenerProductos().get(i).getId() == idAltavozEliminar) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getNombre().equals(nombreAltavozEliminar) && gestorProductos.readProductos().get(i).getId() == idAltavozEliminar) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Altavoz eliminado correctamente");
                                                         break;
                                                     } else {
@@ -497,9 +528,9 @@ public class InterfazEmpleado {
                                                 System.out.println("No has introducido ningún dato");
                                                 break;
                                             } else if (nombreEliminar.equals("") && idEliminar != 0) {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getId() == idEliminar) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getId() == idEliminar) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Ordenador eliminado correctamente");
                                                         break;
                                                     } else {
@@ -508,9 +539,9 @@ public class InterfazEmpleado {
                                                     }
                                                 }
                                             } else if (!nombreEliminar.equals("") && idEliminar == 0) {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreEliminar)) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getNombre().equals(nombreEliminar)) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Ordenador eliminado correctamente");
                                                         break;
                                                     } else {
@@ -519,9 +550,9 @@ public class InterfazEmpleado {
                                                     }
                                                 }
                                             } else {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreEliminar) && gestorProductos.obtenerProductos().get(i).getId() == idEliminar) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getNombre().equals(nombreEliminar) && gestorProductos.readProductos().get(i).getId() == idEliminar) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Ordenador eliminado correctamente");
                                                         break;
                                                     } else {
@@ -547,9 +578,9 @@ public class InterfazEmpleado {
                                                 System.out.println("No has introducido ningún dato");
                                                 break;
                                             } else if (nombreEliminar2.equals("") && idEliminar2 != 0) {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getId() == idEliminar2) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getId() == idEliminar2) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Smartphone eliminado correctamente");
                                                         break;
                                                     } else {
@@ -558,9 +589,9 @@ public class InterfazEmpleado {
                                                     }
                                                 }
                                             } else if (!nombreEliminar2.equals("") && idEliminar2 == 0) {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreEliminar2)) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getNombre().equals(nombreEliminar2)) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Smartphone eliminado correctamente");
                                                         break;
                                                     } else {
@@ -569,9 +600,9 @@ public class InterfazEmpleado {
                                                     }
                                                 }
                                             } else {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreEliminar2) && gestorProductos.obtenerProductos().get(i).getId() == idEliminar2) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getNombre().equals(nombreEliminar2) && gestorProductos.readProductos().get(i).getId() == idEliminar2) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Smartphone eliminado correctamente");
                                                         break;
                                                     } else {
@@ -596,9 +627,9 @@ public class InterfazEmpleado {
                                                 System.out.println("No has introducido ningún dato");
                                                 break;
                                             } else if (nombreEliminar3.equals("") && idEliminar3 != 0) {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getId() == idEliminar3) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getId() == idEliminar3) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Televisor eliminado correctamente");
                                                         break;
                                                     } else {
@@ -607,9 +638,9 @@ public class InterfazEmpleado {
                                                     }
                                                 }
                                             } else if (!nombreEliminar3.equals("") && idEliminar3 == 0) {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreEliminar3)) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getNombre().equals(nombreEliminar3)) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Televisor eliminado correctamente");
                                                         break;
                                                     } else {
@@ -618,9 +649,9 @@ public class InterfazEmpleado {
                                                     }
                                                 }
                                             } else {
-                                                for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                                    if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreEliminar3) && gestorProductos.obtenerProductos().get(i).getId() == idEliminar3) {
-                                                        gestorProductos.obtenerProductos().remove(i);
+                                                for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                                    if (gestorProductos.readProductos().get(i).getNombre().equals(nombreEliminar3) && gestorProductos.readProductos().get(i).getId() == idEliminar3) {
+                                                        gestorProductos.readProductos().remove(i);
                                                         System.out.println("Productos.Televisor eliminado correctamente");
                                                         break;
                                                     } else {
@@ -653,11 +684,11 @@ public class InterfazEmpleado {
                                     System.out.println("No has introducido ningún dato");
                                     break;
                                 } else if (nombreModificar.equals("") && idModificar != 0) {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getId() == idModificar) {
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getId() == idModificar) {
                                             System.out.println("Introduce el nuevo nombre: ");
                                             String nuevoNombre = sc.nextLine();
-                                            gestorProductos.obtenerProductos().get(i).setNombre(nuevoNombre);
+                                            gestorProductos.readProductos().get(i).setNombre(nuevoNombre);
                                             System.out.println("Productos.Producto modificado correctamente");
                                             break;
                                         } else {
@@ -666,11 +697,11 @@ public class InterfazEmpleado {
                                         }
                                     }
                                 } else if (!nombreModificar.equals("") && idModificar == 0) {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreModificar)) {
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getNombre().equals(nombreModificar)) {
                                             System.out.println("Introduce el nuevo ID: ");
                                             int nuevoId = sc.nextInt();
-                                            gestorProductos.obtenerProductos().get(i).setId(nuevoId);
+                                            gestorProductos.readProductos().get(i).setId(nuevoId);
                                             System.out.println("Productos.Producto modificado correctamente");
                                             break;
                                         } else {
@@ -679,14 +710,14 @@ public class InterfazEmpleado {
                                         }
                                     }
                                 } else {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreModificar) && gestorProductos.obtenerProductos().get(i).getId() == idModificar) {
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getNombre().equals(nombreModificar) && gestorProductos.readProductos().get(i).getId() == idModificar) {
                                             System.out.println("Introduce el nuevo nombre: ");
                                             String nuevoNombre = sc.nextLine();
-                                            gestorProductos.obtenerProductos().get(i).setNombre(nuevoNombre);
+                                            gestorProductos.readProductos().get(i).setNombre(nuevoNombre);
                                             System.out.println("Introduce el nuevo ID: ");
                                             int nuevoId = sc.nextInt();
-                                            gestorProductos.obtenerProductos().get(i).setId(nuevoId);
+                                            gestorProductos.readProductos().get(i).setId(nuevoId);
                                             System.out.println("Productos.Producto modificado correctamente");
                                             break;
                                         } else {
@@ -710,9 +741,9 @@ public class InterfazEmpleado {
                                     System.out.println("No has introducido ningún dato");
                                     break;
                                 } else if (nombreMostrar.equals("") && idMostrar != 0) {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getId() == idMostrar) {
-                                            System.out.println(gestorProductos.obtenerProductos().get(i));
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getId() == idMostrar) {
+                                            System.out.println(gestorProductos.readProductos().get(i));
                                             break;
                                         } else {
                                             System.out.println("No se ha encontrado el producto");
@@ -720,9 +751,9 @@ public class InterfazEmpleado {
                                         }
                                     }
                                 } else if (!nombreMostrar.equals("") && idMostrar == 0) {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreMostrar)) {
-                                            System.out.println(gestorProductos.obtenerProductos().get(i));
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getNombre().equals(nombreMostrar)) {
+                                            System.out.println(gestorProductos.readProductos().get(i));
                                             break;
                                         } else {
                                             System.out.println("No se ha encontrado el producto");
@@ -730,9 +761,9 @@ public class InterfazEmpleado {
                                         }
                                     }
                                 } else {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreMostrar) && gestorProductos.obtenerProductos().get(i).getId() == idMostrar) {
-                                            System.out.println(gestorProductos.obtenerProductos().get(i));
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getNombre().equals(nombreMostrar) && gestorProductos.readProductos().get(i).getId() == idMostrar) {
+                                            System.out.println(gestorProductos.readProductos().get(i));
                                             break;
                                         } else {
                                             System.out.println("No se ha encontrado el producto");
@@ -781,11 +812,11 @@ public class InterfazEmpleado {
                                     System.out.println("No has introducido ningún dato");
                                     break;
                                 } else if (nombreModificarStock.equals("") && idModificarStock != 0) {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getId() == idModificarStock) {
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getId() == idModificarStock) {
                                             System.out.println("Introduce el nuevo stock: ");
                                             int nuevoStock = sc.nextInt();
-                                            gestorProductos.obtenerProductos().get(i).setStock(nuevoStock);
+                                            gestorProductos.readProductos().get(i).setStock(nuevoStock);
                                             System.out.println("Stock modificado correctamente");
                                             break;
                                         } else {
@@ -794,11 +825,11 @@ public class InterfazEmpleado {
                                         }
                                     }
                                 } else if (!nombreModificarStock.equals("") && idModificarStock == 0) {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreModificarStock)) {
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getNombre().equals(nombreModificarStock)) {
                                             System.out.println("Introduce el nuevo stock: ");
                                             int nuevoStock = sc.nextInt();
-                                            gestorProductos.obtenerProductos().get(i).setStock(nuevoStock);
+                                            gestorProductos.readProductos().get(i).setStock(nuevoStock);
                                             System.out.println("Stock modificado correctamente");
                                             break;
                                         } else {
@@ -807,11 +838,11 @@ public class InterfazEmpleado {
                                         }
                                     }
                                 } else {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreModificarStock) && gestorProductos.obtenerProductos().get(i).getId() == idModificarStock) {
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getNombre().equals(nombreModificarStock) && gestorProductos.readProductos().get(i).getId() == idModificarStock) {
                                             System.out.println("Introduce el nuevo stock: ");
                                             int nuevoStock = sc.nextInt();
-                                            gestorProductos.obtenerProductos().get(i).setStock(nuevoStock);
+                                            gestorProductos.readProductos().get(i).setStock(nuevoStock);
                                             System.out.println("Stock modificado correctamente");
                                             break;
                                         } else {
@@ -834,9 +865,9 @@ public class InterfazEmpleado {
                                     System.out.println("No has introducido ningún dato");
                                     break;
                                 } else if (nombreMostrarStock.equals("") && idMostrarStock != 0) {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getId() == idMostrarStock) {
-                                            System.out.println(gestorProductos.obtenerProductos().get(i));
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getId() == idMostrarStock) {
+                                            System.out.println(gestorProductos.readProductos().get(i));
                                             break;
                                         } else {
                                             System.out.println("No se ha encontrado el producto");
@@ -844,9 +875,9 @@ public class InterfazEmpleado {
                                         }
                                     }
                                 } else if (!nombreMostrarStock.equals("") && idMostrarStock == 0) {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreMostrarStock)) {
-                                            System.out.println(gestorProductos.obtenerProductos().get(i));
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getNombre().equals(nombreMostrarStock)) {
+                                            System.out.println(gestorProductos.readProductos().get(i));
                                             break;
                                         } else {
                                             System.out.println("No se ha encontrado el producto");
@@ -854,9 +885,9 @@ public class InterfazEmpleado {
                                         }
                                     }
                                 } else {
-                                    for (int i = 0; i < gestorProductos.obtenerProductos().size(); i++) {
-                                        if (gestorProductos.obtenerProductos().get(i).getNombre().equals(nombreMostrarStock) && gestorProductos.obtenerProductos().get(i).getId() == idMostrarStock) {
-                                            System.out.println(gestorProductos.obtenerProductos().get(i));
+                                    for (int i = 0; i < gestorProductos.readProductos().size(); i++) {
+                                        if (gestorProductos.readProductos().get(i).getNombre().equals(nombreMostrarStock) && gestorProductos.readProductos().get(i).getId() == idMostrarStock) {
+                                            System.out.println(gestorProductos.readProductos().get(i));
                                             break;
                                         } else {
                                             System.out.println("No se ha encontrado el producto");
@@ -899,51 +930,36 @@ public class InterfazEmpleado {
                                 System.out.println("Mostrar pedidos");
                                 System.out.println("===============");
                                 System.out.println("\n\n\n");
-                                System.out.println("Introduce uno o los dos datos. Si no sabes el nombre, dejalo en blanco y solo introduce el ID. Si no sabes el ID, introduce 0 y solo introduce el nombre ");
-                                System.out.println("Nombre: ");
-                                String nombreMostrarPedido = sc.nextLine();
-                                System.out.println("ID: ");
+                                System.out.println("Introduce el ID");
                                 int idMostrarPedido = sc.nextInt();
-                                if (nombreMostrarPedido.equals("") && idMostrarPedido == 0) {
-                                    System.out.println("No has introducido ningún dato");
-                                    break;
-                                } else if (nombreMostrarPedido.equals("") && idMostrarPedido != 0) {
-                                    gestorPedidos.buscarPedido(idMostrarPedido);
-                                    break;
-                                } else if (!nombreMostrarPedido.equals("") && idMostrarPedido == 0) {
-                                    gestorPedidos.buscarPedido(nombreMostrarPedido);
-                                    break;
-                                } else {
-                                    gestorPedidos.buscarPedido(idMostrarPedido, nombreMostrarPedido);
-                                    break;
+                                boolean existe;
+                                if(gestorPedidos.buscarVenta(idMostrarPedido).getId() != 0) {
+                                    pedido.Venta pedido = gestorPedidos.buscarVenta(idMostrarPedido);
+                                    System.out.println(pedido.toString());
                                 }
+                                else {
+                                    System.out.println("No existe ese pedido");
+                                }
+                                    break;
+
+
                             case 2:
                                 System.out.println("Eliminar pedido");
                                 System.out.println("===============");
                                 System.out.println("\n\n\n");
-                                System.out.println("Introduce uno o los dos datos. Si no sabes el nombre, dejalo en blanco y solo introduce el ID. Si no sabes el ID, introduce 0 y solo introduce el nombre ");
-                                System.out.println("Nombre: ");
-                                String nombreEliminarPedido = sc.nextLine();
-                                System.out.println("ID: ");
+                                System.out.println("Introduce el ID: ");
                                 int idEliminarPedido = sc.nextInt();
-                                if (nombreEliminarPedido.equals("") && idEliminarPedido == 0) {
-                                    System.out.println("No has introducido ningún dato");
-                                    break;
-                                } else if (nombreEliminarPedido.equals("") && idEliminarPedido != 0) {
-                                    gestorPedidos.eliminarPedido(idEliminarPedido);
-                                    break;
-                                } else if (!nombreEliminarPedido.equals("") && idEliminarPedido == 0) {
-                                    gestorPedidos.eliminarPedido(nombreEliminarPedido);
-                                    break;
-                                } else {
-                                    gestorPedidos.eliminarPedido(idEliminarPedido, nombreEliminarPedido);
-                                    break;
+                                if(gestorPedidos.buscarVenta(idEliminarPedido).getId() != 0){
+
                                 }
                             case 3:
                                 System.out.println("Mostrar todos los pedidos");
                                 System.out.println("===============");
                                 System.out.println("\n\n\n");
-                                gestorPedidos.mostrarPedidos();
+                                for(int i = 0; i < gestorPedidos.readPedidos().size(); i++){
+                                    System.out.println(gestorPedidos.readPedidos().get(i).toString());
+                                }
+
                                 break;
 
                             case 5:
@@ -978,21 +994,21 @@ public class InterfazEmpleado {
                         } else if (nombreProducto.equals("") && idProducto != 0) {
                             boolean boolProducto = gestorProductos.existeProducto(idProducto);
                             if (boolProducto == true) {
-                                productoPedido = gestorProductos.getProducto(idProducto);
+                                productoPedido = gestorProductos.buscarProducto(idProducto);
                             } else {
                                 System.out.println("No existe el producto");
                             }
                         } else if (!nombreProducto.equals("") && idProducto == 0) {
                             boolean boolProducto = gestorProductos.existeProducto(nombreProducto);
                             if (boolProducto) {
-                                productoPedido = gestorProductos.getProducto(nombreProducto);
+                                productoPedido = gestorProductos.buscarProducto(nombreProducto);
                             } else {
                                 System.out.println("No existe el producto");
                             }
                         } else {
                             boolean boolProducto = gestorProductos.existeProducto(nombreProducto, idProducto);
                             if (boolProducto == true) {
-                                productoPedido = gestorProductos.getProducto(nombreProducto, idProducto);
+                                productoPedido = gestorProductos.buscarProducto(idProducto, nombreProducto);
                             } else {
                                 System.out.println("No existe el producto");
                             }
@@ -1003,8 +1019,9 @@ public class InterfazEmpleado {
                         if (cantidad <= 0) {
                             System.out.println("La cantidad debe ser mayor que 0");
                         }
+                        /*
                         gestorPedidos.hacerPedidoTienda(productoPedido, cantidad);
-
+                        */
                         System.out.println("¿Quieres hacer otro pedido? (S/N)");
                         String respuesta = sc.nextLine();
                         if (respuesta.equals("S") || respuesta.equals("s")) {

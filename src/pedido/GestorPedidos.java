@@ -1,146 +1,180 @@
 package pedido;
 
-import cliente.Cliente;
-import producto.GestorProductos;
-import producto.Producto;
-
+import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Scanner;
+import util.GestorId;
+import pedido.Venta;
+
 
 public class GestorPedidos {
     GestorId gestorId = new GestorId();
-    private ArrayList<Venta> pedidoList;
-
-
-
-
-    public GestorPedidos() {
-        pedidoList = new ArrayList<>();
-    }
-
-    public void addPedido(Venta pedido) {
-        pedidoList.add(pedido);
-    }
-
-    public ArrayList<Venta> obtenerPedidos() {
-        return pedidoList;
-    }
-
-    public void hacerPedidoTienda(Producto producto, int cantidad) {
-        Cliente cliente = new Cliente("PEDIDO EN TIENDA", "PEDIDO EN TIENDA", "PEDIDO EN TIENDA", "PEDIDO EN TIENDA", "PEDIDO EN TIENDA", "PEDIDO EN TIENDA", "PEDIDO EN TIENDA", "PEDIDO EN TIENDA");
-        double precioTotal = producto.getPrecio() * cantidad;
-        Venta pedido = new Venta(gestorId.getId(), "01/01/2021", cliente, producto, cantidad, precioTotal);
-        pedidoList.add(pedido);
-    }
-    public void eliminarPedido(int id) {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            if (pedidoList.get(i).getId() == id) {
-                pedidoList.remove(i);
+    public void inicializarPedidos() {
+        File file = new File("../pedidos.txt");
+        if (file.exists()) {
+            System.out.println("El archivo está inicializado");
+        } else {
+            try{
+                FileWriter writer = new FileWriter(file);
+                writer.write(gestorId.assignId() + ", 01/01/2021, 23459934Q, 1, 1, 1128");
+                writer.write(gestorId.assignId() + ", 02/01/2021, 84273345I, 2, 1, 999");
+                writer.close();
+                System.out.println("Archivo creado");
+            } catch (IOException e) {
+                System.out.println("Error de entrada/salida: " + e.getMessage());
+                e.printStackTrace();
+            }
             }
         }
+
+        public void addPedido(Venta pedido){
+        File file = new File("../pedidos.txt");
+        if(file.exists()){
+            try {
+                FileWriter writer = new FileWriter(file);
+                writer.write(pedido.getId() + ", " + pedido.getFecha() + ", " + pedido.getDniCliente() + ", " + pedido.getIdProducto() + ", " + pedido.getCantidad() + ", " + pedido.getPrecio());
+                writer.close();
+                System.out.println("Pedido añadido");
+            } catch (IOException e) {
+                System.out.println("Error de entrada/salida: " + e.getMessage());
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("El archivo no existe");
+        }
     }
 
-    public void eliminarPedido(String nombre) {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            if (pedidoList.get(i).getNombre().equals(nombre)) {
-                pedidoList.remove(i);
+    public List<Venta> readPedidos(){
+        List<Venta> pedidos = new ArrayList<>();
+        try{
+            File file = new File("../pedidos.txt");
+            Scanner scanner = new Scanner(file);
+            while(scanner.hasNextLine()){
+                String[] datos = scanner.nextLine().split(", ");
+                Venta pedido = new Venta(Integer.parseInt(datos[0]), datos[1], datos[2], Integer.parseInt(datos[3]), Integer.parseInt(datos[4]), Integer.parseInt(datos[5]));
+                pedidos.add(pedido);
+            }
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("El archivo no existe");
+            e.printStackTrace();
+        }
+        return pedidos;
+    }
+
+    public Venta buscarVenta(int id){
+        List<Venta> ventas = new ArrayList<>();
+        try{
+            File file = new File("../pedidos.txt");
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String[] datos = scanner.nextLine().split(", ");
+                Venta venta = new Venta(Integer.parseInt(datos[0]), datos[1], datos[2], Integer.parseInt(datos[3]), Integer.parseInt(datos[4]), Integer.parseInt(datos[5]));
+                ventas.add(venta);
+            }
+            scanner.close();
+        }   catch (FileNotFoundException e) {
+            System.out.println("El archivo no existe");
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < ventas.size(); i++) {
+            if (ventas.get(i).getId() == id) {
+                return ventas.get(i);
             }
         }
+        Venta noexiste = new Venta(0, "0", "0", 0, 0, 0);
+        return noexiste;
     }
 
-    public void eliminarPedido(int id, String nombre) {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            if (pedidoList.get(i).getId() == id && pedidoList.get(i).getNombre().equals(nombre)) {
-                pedidoList.remove(i);
+
+        public void updatePedido(int idModificar, Venta pedidoNuevo){
+            List<Venta> pedidos = new ArrayList<>();
+            try{
+                File file = new File("../pedidos.txt");
+                Scanner scanner = new Scanner(file);
+
+                while (scanner.hasNextLine()) {
+                    String[] datos = scanner.nextLine().split(", ");
+                    Venta pedido = new Venta(Integer.parseInt(datos[0]), datos[1], datos[2], Integer.parseInt(datos[3]), Integer.parseInt(datos[4]), Double.parseDouble(datos[5]));
+                    pedidos.add(pedido);
+                }
+                scanner.close();
+            }   catch (FileNotFoundException e) {
+                System.out.println("El archivo no existe");
+                e.printStackTrace();
+            }
+
+            for (int i = 0; i < pedidos.size(); i++) {
+                if (pedidos.get(i).getId() == idModificar) {
+                    pedidos.set(i, pedidoNuevo);
+                }
+            }
+
+            try {
+                PrintWriter writer = new PrintWriter("../pedidos.txt");
+                writer.print("");
+                writer.close();
+
+                PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("../pedidos.txt")));
+                for (int i = 0; i < pedidos.size(); i++) {
+                    out.println(pedidos.get(i).getId() + ", " + pedidos.get(i).getFecha() + ", " + pedidos.get(i).getDniCliente() + ", " + pedidos.get(i).getIdProducto() + ", " + pedidos.get(i).getCantidad() + ", " + pedidos.get(i).getPrecio());
+                }
+                out.close();
+
+                Scanner scanner = new Scanner(new File("../pedidos.txt"));
+                while (scanner.hasNextLine()) {
+                    System.out.println(scanner.nextLine());
+                }
+                scanner.close();
+            }   catch (FileNotFoundException e) {
+                System.out.println("El archivo no existe");
+                e.printStackTrace();
+            }   catch (IOException e) {
+                System.out.println("Error de entrada/salida: " + e.getMessage());
+                e.printStackTrace();
             }
         }
-    }
 
-    public void hacerPedido(int id, String fecha, Cliente cliente, Producto producto, int cantidad, double precioTotal) {
-        Venta pedido = new Venta(id, fecha, cliente, producto, cantidad, precioTotal);
-        pedidoList.add(pedido);
-    }
+        public void deletePedido(int idPedido){
+        File archivoTemporal = new File("../pedidosTemporal.txt");
 
-    public void mostrarPedidos() {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            System.out.println(pedidoList.get(i));
-        }
-    }
+        try{
+            BufferedReader lector = new BufferedReader(new FileReader("../pedidos.txt"));
+            BufferedWriter escritor = new BufferedWriter(new FileWriter(archivoTemporal));
 
-    public void actualizarPedido(Venta pedido) {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            if (pedidoList.get(i).getId() == pedido.getId()) {
-                pedidoList.set(i, pedido);
+            String lineaActual;
+
+            while ((lineaActual = lector.readLine()) != null) {
+                String[] datos = lineaActual.split(", ");
+
+                if (datos[0].equals(idPedido)) {
+                    escritor.write(lineaActual);
+                    escritor.newLine();
+                }
             }
+
+            lector.close();
+            escritor.close();
+
+            File archivoOriginal = new File("../pedidos.txt");
+            archivoTemporal.renameTo(archivoOriginal);
+        } catch (IOException e) {
+            System.out.println("Error de entrada/salida: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-
-    public void buscarPedido(String nombre) {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            if (pedidoList.get(i).getNombre().equals(nombre)) {
-                System.out.println(pedidoList.get(i));
-            }
+    public boolean existePedido(int id){
+        if(readPedidos().size() <= id){
+            return true;
         }
-    }
-
-    public void buscarPedido(int id) {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            if (pedidoList.get(i).getId() == id) {
-                System.out.println(pedidoList.get(i));
-            }
-        }
-    }
-
-    public boolean existePedido(int id) {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            if (pedidoList.get(i).getId() == id) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean existePedido(String nombre) {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            if (pedidoList.get(i).getNombre().equals(nombre)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean existePedido(int id, String nombre) {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            if (pedidoList.get(i).getId() == id && pedidoList.get(i).getNombre().equals(nombre)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void buscarPedido(int id, String nombre) {
-        for (int i = 0; i < pedidoList.size(); i++) {
-            if (pedidoList.get(i).getId() == id && pedidoList.get(i).getNombre().equals(nombre)) {
-                System.out.println(pedidoList.get(i));
-            }
-        }
-    }
-
-    public void inicializarPedidos(GestorPedidos self) {
-        GestorClientes gestorClientes = new GestorClientes();
-        GestorProductos gestorProductos = new GestorProductos();
-        gestorClientes.inicializarClientes(gestorClientes);
-        gestorProductos.inicializarProductos(gestorProductos);
-        Venta pedido1 = new Venta(gestorId.assignId() , "01/01/2020", gestorClientes.obtenerClientes().get(0), gestorProductos.obtenerProductos().get(0), 1, 10);
-        Venta pedido2 = new Venta(gestorId.assignId(), "02/02/2020", gestorClientes.obtenerClientes().get(1), gestorProductos.obtenerProductos().get(1), 2, 20);
-        Venta pedido3 = new Venta(gestorId.assignId(), "03/03/2020", gestorClientes.obtenerClientes().get(0), gestorProductos.obtenerProductos().get(0), 3, 30);
-        Venta pedido4 = new Venta(gestorId.assignId(), "04/04/2020", gestorClientes.obtenerClientes().get(1), gestorProductos.obtenerProductos().get(1), 4, 40);
-        Venta pedido5 = new Venta(gestorId.assignId(), "05/05/2020", gestorClientes.obtenerClientes().get(1), gestorProductos.obtenerProductos().get(1), 5, 50);
-        self.addPedido(pedido1);
-        self.addPedido(pedido2);
-        self.addPedido(pedido3);
-        self.addPedido(pedido4);
-        self.addPedido(pedido5);
+        else
+            return false;
     }
 
 }

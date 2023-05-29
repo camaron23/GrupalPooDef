@@ -1,17 +1,16 @@
 package empleado;
 
 public class Empleado {
-    private
-    String nombre;
-    String apellidos;
-    String dni;
-    String direccion;
-    String telefono;
-    String email;
-    String puesto;
-    double salario;
-    String contraseña;
-    boolean privilegios;
+    private String nombre;
+    private String apellidos;
+    private String dni;
+    private String direccion;
+    private String telefono;
+    private String email;
+    private String puesto;
+    private double salario;
+    private String contraseña;
+    private boolean privilegios;
 
     public Empleado(String nombre, String apellidos, String dni, String direccion, String telefono, String email, String puesto, double salario, String contraseña, boolean privilegios) {
         this.nombre = nombre;
@@ -23,40 +22,51 @@ public class Empleado {
         this.puesto = puesto;
         this.salario = salario;
         this.contraseña = contraseña;
-        privilegios = false;
-    }
-
-    public Empleado() {
-        this.nombre = "";
-        this.apellidos = "";
-        this.dni = "";
-        this.direccion = "";
-        this.telefono = "";
-        this.email = "";
-        this.puesto = "";
-        this.salario = 0.0;
-        this.contraseña = "";
-        privilegios = false;
+        this.privilegios = privilegios;
     }
 
     public String getNombre() {
         return nombre;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public String getApellidos() {
         return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 
     public String getDni() {
         return dni;
     }
 
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
     public String getDireccion() {
         return direccion;
     }
 
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
     public String getTelefono() {
         return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getEmail() {
@@ -71,29 +81,6 @@ public class Empleado {
         return salario;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
-    public void setDni(String dni) {
-        this.dni = dni;
-    }
-
-    public void setDireccion(String direccion) {
-        this.direccion = direccion;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public void setPuesto(String puesto) {
         this.puesto = puesto;
@@ -121,7 +108,16 @@ public class Empleado {
 
     @Override
     public String toString() {
-        return "Empleado.Empleado [apellidos=" + apellidos + ", direccion=" + direccion + ", dni=" + dni + ", email=" + email
-                + ", nombre=" + nombre + ", puesto=" + puesto + ", salario=" + salario + ", telefono=" + telefono + "privilegios=" + privilegios +"]";
+        return "Empleado [nombre=" + nombre + ", apellidos=" + apellidos + ", dni=" + dni + ", direccion=" + direccion +
+                ", telefono=" + telefono + ", email=" + email + ", puesto=" + puesto + ", salario=" + salario + ", contraseña=" + contraseña +
+                ", privilegios=" + privilegios + "]";
+    }
+
+    public String isPrivilegios() {
+        if(privilegios == true) {
+            return "true";
+        } else {
+            return "false";
+        }
     }
 }

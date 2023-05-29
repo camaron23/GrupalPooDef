@@ -1,15 +1,14 @@
 package cliente;
 
 public class Cliente {
-    private
-    String nombre;
-    String apellidos;
-    String dni;
-    String direccion;
-    String telefono;
-    String email;
-    String usuario;
-    String contraseña;
+    private static String nombre;
+    private static String apellidos;
+    private static String dni;
+    private static String direccion;
+    private static String telefono;
+    private static String email;
+    private static String usuario;
+    private static String contraseña;
 
     public Cliente(String nombre, String apellidos, String dni, String direccion, String telefono, String email, String usuario, String contraseña) {
         this.nombre = nombre;
@@ -23,74 +22,67 @@ public class Cliente {
     }
 
     public Cliente() {
-        this.nombre = "";
-        this.apellidos = "";
-        this.dni = "";
-        this.direccion = "";
-        this.telefono = "";
-        this.email = "";
-        this.usuario = "";
-        this.contraseña = "";
+        this("", "", "", "", "", "", "", "");
     }
 
-    public String getNombre() {
+    public static String getNombre() {
         return nombre;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public String getDni() {
-        return dni;
-    }
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    public static String getApellidos() {
+        return apellidos;
+    }
+
     public void setApellidos(String apellidos) {
         this.apellidos = apellidos;
+    }
+
+    public static String getDni() {
+        return dni;
     }
 
     public void setDni(String dni) {
         this.dni = dni;
     }
 
+    public static String getDireccion() {
+        return direccion;
+    }
+
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public static String getTelefono() {
+        return telefono;
     }
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
+    public static String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getUsuario() {
+    public static String getUsuario() {
         return usuario;
-    }
-
-    public String getContraseña() {
-        return contraseña;
     }
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+
+    public static String getContraseña() {
+        return contraseña;
     }
 
     public void setContraseña(String contraseña) {
@@ -98,10 +90,19 @@ public class Cliente {
     }
 
 
-
     @Override
     public String toString() {
-        return "Cliente.Cliente [nombre=" + nombre + ", apellidos=" + apellidos + ", dni=" + dni + ", direccion=" + direccion
-                + ", telefono=" + telefono + ", email=" + email + "usuario=" + usuario + "]";
+        return "Cliente{" +
+                "nombre='" + nombre + '\'' +
+                ", apellidos='" + apellidos + '\'' +
+                ", dni='" + dni + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", email='" + email + '\'' +
+                ", usuario='" + usuario + '\'' +
+                ", contraseña='" + contraseña + '\'' +
+                '}';
     }
+
+
 }

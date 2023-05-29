@@ -1,5 +1,7 @@
 import cliente.Cliente;
+import cliente.InterfazCliente;
 import empleado.Empleado;
+import empleado.InterfazEmpleado;
 import util.PasarelaAuthentificacion;
 
 public class Main {

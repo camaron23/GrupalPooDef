@@ -7,16 +7,16 @@ public class Venta {
     private
     int id;
     String fecha;
-    Cliente cliente;
-    Producto producto;
+    String clienteDni;
+    int productoId;
     int cantidad;
     double precioTotal;
 
-    public Venta(int id, String fecha, Cliente cliente, Producto producto, int cantidad, double precioTotal) {
+    public Venta(int id, String fecha, String clienteDni, int productoId, int cantidad, double precioTotal) {
         this.id = id;
         this.fecha = fecha;
-        this.cliente = cliente;
-        this.producto = producto;
+        this.clienteDni = clienteDni;
+        this.productoId = productoId;
         this.cantidad = cantidad;
         this.precioTotal = precioTotal;
     }
@@ -24,8 +24,8 @@ public class Venta {
     public Venta() {
         this.id = 0;
         this.fecha = "";
-        this.cliente = new Cliente();
-        this.producto = new Producto();
+        this.clienteDni = "";
+        this.productoId = 0;
         this.cantidad = 0;
         this.precioTotal = 0.0;
     }
@@ -34,20 +34,16 @@ public class Venta {
         return id;
     }
 
-    public String getNombre() {
-        return producto.getNombre();
-    }
-
     public String getFecha() {
         return fecha;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public String getClienteDni() {
+        return clienteDni;
     }
 
-    public Producto getProducto() {
-        return producto;
+    public int getProductoId() {
+        return productoId;
     }
 
     public int getCantidad() {
@@ -66,12 +62,9 @@ public class Venta {
         this.fecha = fecha;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
 
-    public void setProducto(Producto producto) {
-        this.producto = producto;
+    public void setProductoId(int productoId) {
+        this.productoId = productoId;
     }
 
     public void setCantidad(int cantidad) {
@@ -84,7 +77,19 @@ public class Venta {
 
     @Override
     public String toString() {
-        return "Pedidos.Venta [cantidad=" + cantidad + ", cliente=" + cliente + ", fecha=" + fecha + ", id=" + id + ", producto="
-                + producto + ", precioTotal=" + precioTotal + "]";
+        return "Pedidos.Venta [cantidad=" + cantidad + ", DNI del Cliente=" + clienteDni + ", fecha=" + fecha + ", id=" + id + ", ID del producto="
+                + productoId + ", precioTotal=" + precioTotal + "]";
+    }
+
+    public String getDniCliente() {
+        return clienteDni;
+    }
+
+    public int getIdProducto() {
+        return productoId;
+    }
+
+    public double getPrecio() {
+        return precioTotal;
     }
 }
