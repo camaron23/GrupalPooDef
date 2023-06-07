@@ -85,7 +85,9 @@ public class GestorEmpleados {
             System.out.println("Error de entrada/salida: " + e.getMessage());
             e.printStackTrace();
         }
-
+        for (int i = 0; i < empleados.size(); i++){
+            System.out.println(empleados.get(i).toString());
+        }
         for(int i = 0; i < empleados.size(); i++){
             if(empleados.get(i).getDni().equals(dni)){
                 return empleados.get(i);

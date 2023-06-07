@@ -2,6 +2,7 @@ package cliente;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.io.File;
 import java.io.FileWriter;
@@ -19,7 +20,8 @@ public class GestorClientes {
             try {
                 FileWriter writer = new FileWriter(file);
                 writer.write("Aaron, Garcia, 23459934Q, Calle Real 23, 627384654, aarongarcia@gmail.com, aarongarcia, 1234\n");
-                writer.write("Carlota, Fernandez, 84273345I, Calle Mayor 12, 638511033, carlotafernandez@gmail.com, carlotafernandez, 1234");
+                writer.write("Carlota, Fernandez, 84273345I, Calle Mayor 12, 638511033, carlotafernandez@gmail.com, carlotafernandez, 1234\n");
+                writer.write("Sara, Lopez, 23459934Q, Calle Real 23, 627384654, saralopez@gmail.com, saralopez, 1234\n");
                 writer.close();
                 System.out.println("Archivo creado");
             } catch (IOException e) {
@@ -54,6 +56,7 @@ public class GestorClientes {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
                 String[] datos = scanner.nextLine().split(", ");
+                System.out.println("Datos: " + Arrays.toString(datos)); // Imprimir los datos para depurar
                 Cliente cliente = new Cliente(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6], datos[7]);
                 clientes.add(cliente);
             }
@@ -66,22 +69,12 @@ public class GestorClientes {
     }
 
 
-    public Cliente buscarCliente(String user) {
-        List<Cliente> clientes = new ArrayList<>();
-        try{
-            File file = new File("../clientes.txt");
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                String[] datos = scanner.nextLine().split(", ");
-                Cliente cliente = new Cliente(datos[0], datos[1], datos[2], datos[3], datos[4], datos[5], datos[6], datos[7]);
-                clientes.add(cliente);
-            }
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("El archivo no existe");
-            e.printStackTrace();
+    public Cliente buscarCliente(String user){
+        inicializarClientes();
+        List<Cliente> clientes = readClientes();
+        for(int i = 0; i < clientes.size(); i++) {
+            System.out.println(clientes.get(i).getUsuario());
         }
-
         for(int i = 0; i < clientes.size(); i++) {
             if (clientes.get(i).getUsuario().equals(user)) {
                 Cliente clienteBuscado = clientes.get(i);
@@ -106,7 +99,6 @@ public class GestorClientes {
             System.out.println("El archivo no existe");
             e.printStackTrace();
         }
-
         for(int i = 0; i < clientes.size(); i++) {
             if (clientes.get(i).getDni().equals(dni)) {
                 Cliente clienteBuscado = clientes.get(i);

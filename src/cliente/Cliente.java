@@ -1,14 +1,14 @@
 package cliente;
 
 public class Cliente {
-    private static String nombre;
-    private static String apellidos;
-    private static String dni;
-    private static String direccion;
-    private static String telefono;
-    private static String email;
-    private static String usuario;
-    private static String contraseña;
+    private String nombre;
+    private String apellidos;
+    private String dni;
+    private String direccion;
+    private String telefono;
+    private String email;
+    private String usuario;
+    private String contraseña;
 
     public Cliente(String nombre, String apellidos, String dni, String direccion, String telefono, String email, String usuario, String contraseña) {
         this.nombre = nombre;
@@ -25,7 +25,7 @@ public class Cliente {
         this("", "", "", "", "", "", "", "");
     }
 
-    public static String getNombre() {
+    public String getNombre() {
         return nombre;
     }
 
@@ -33,7 +33,7 @@ public class Cliente {
         this.nombre = nombre;
     }
 
-    public static String getApellidos() {
+    public String getApellidos() {
         return apellidos;
     }
 
@@ -41,7 +41,7 @@ public class Cliente {
         this.apellidos = apellidos;
     }
 
-    public static String getDni() {
+    public String getDni() {
         return dni;
     }
 
@@ -49,7 +49,7 @@ public class Cliente {
         this.dni = dni;
     }
 
-    public static String getDireccion() {
+    public String getDireccion() {
         return direccion;
     }
 
@@ -57,7 +57,7 @@ public class Cliente {
         this.direccion = direccion;
     }
 
-    public static String getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
@@ -65,7 +65,7 @@ public class Cliente {
         this.telefono = telefono;
     }
 
-    public static String getEmail() {
+    public String getEmail() {
         return email;
     }
 
@@ -73,7 +73,7 @@ public class Cliente {
         this.email = email;
     }
 
-    public static String getUsuario() {
+    public String getUsuario() {
         return usuario;
     }
 
@@ -81,7 +81,7 @@ public class Cliente {
         this.usuario = usuario;
     }
 
-    public static String getContraseña() {
+    public String getContraseña() {
         return contraseña;
     }
 
